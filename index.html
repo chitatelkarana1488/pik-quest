@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b16">
+<title>Пик-Квест — учи Python, ведя робота</title>
+<link rel="stylesheet" href="css/style.css?v=7">
+<link rel="icon" href="icons/icon-192.png" sizes="192x192">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="application-name" content="Пик-Квест">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Пик-Квест">
+</head>
+<body>
+
+<div class="bg-grid" aria-hidden="true"></div>
+
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2 21 7v10l-9 5-9-5V7z" fill="currentColor" opacity=".18"/><path d="M12 2 21 7v10l-9 5-9-5V7z" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="11" r="1.4" fill="currentColor"/><circle cx="15" cy="11" r="1.4" fill="currentColor"/></svg>
+      </span>
+      <span class="brand-text">ПИК<b>·</b>КВЕСТ</span>
+    </div>
+
+    <div class="head-level">
+      <div class="chapter" id="chapterName">Глава 1</div>
+      <div class="lvl-title" id="levelTitle">Первый шаг</div>
+    </div>
+
+    <div class="head-actions">
+      <span class="pill" id="pyStatus" title="Движок Python">Python: загрузка…</span>
+      <button class="icon-btn" id="installBtn" hidden title="Установить приложение">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3v11m0 0 4-4m-4 4-4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 17v3h16v-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <span>Установить</span>
+      </button>
+      <button class="icon-btn" id="mapBtn" title="Карта уровней">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 3v15M15 6v15" stroke="currentColor" stroke-width="1.6"/></svg>
+        <span>Карта</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <section class="stage">
+      <div class="story" id="story"></div>
+
+      <div class="board-wrap" id="boardWrap">
+        <div class="board" id="board"></div>
+      </div>
+
+      <div class="hud">
+        <span class="chip" id="chipCrystals">◆ 0/0</span>
+        <span class="chip" id="chipActions">⚡ 0</span>
+        <span class="chip ghost-chip" id="chipPar">рекорд —</span>
+      </div>
+
+      <div class="stage-actions">
+        <button class="ghost" id="hintBtn">💡 Подсказка</button>
+        <button class="ghost" id="restartBtn">↺ Сброс поля</button>
+      </div>
+
+      <div class="hint-box" id="hintBox" hidden></div>
+    </section>
+
+    <section class="workbench">
+      <div class="tabs">
+        <button class="tab active" data-tab="code">Код</button>
+        <button class="tab" data-tab="help">Команды</button>
+        <span class="spacer"></span>
+        <button class="mini" id="resetCodeBtn" title="Вернуть стартовый код">↺</button>
+      </div>
+
+      <div class="panes">
+        <div class="pane active" data-pane="code">
+          <div class="editor" id="editorWrap">
+            <pre class="hl" aria-hidden="true"><code id="hlCode"></code></pre>
+            <textarea id="code" spellcheck="false" wrap="off" autocapitalize="off"
+                      autocomplete="off" autocorrect="off" enterkeyhint="enter"></textarea>
+          </div>
+
+          <div class="toolbar">
+            <button class="key" id="tabKey" title="Вставить отступ">⇥ отступ</button>
+            <button class="run" id="runBtn">
+              <span class="run-label">▶ Запустить</span>
+              <kbd>Ctrl ↵</kbd>
+            </button>
+          </div>
+
+          <div class="console" id="console"><span class="muted">Здесь появится вывод программы…</span></div>
+        </div>
+
+        <div class="pane" data-pane="help">
+          <div class="palette" id="palette"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Карта уровней -->
+<div class="overlay" id="mapOverlay" hidden>
+  <div class="sheet">
+    <div class="sheet-head">
+      <h2>Карта Пифонии</h2>
+      <button class="close" data-close="mapOverlay" aria-label="Закрыть">✕</button>
+    </div>
+    <div class="sheet-body" id="mapBody"></div>
+    <div class="sheet-foot">
+      <button class="ghost sm" id="wipeBtn">Сбросить прогресс</button>
+    </div>
+  </div>
+</div>
+
+<!-- Победа -->
+<div class="overlay" id="winOverlay" hidden>
+  <div class="win-card">
+    <div class="win-glow" aria-hidden="true"></div>
+    <div class="win-emoji" id="winEmoji">🏆</div>
+    <h2 id="winTitle">Уровень пройден!</h2>
+    <p id="winText"></p>
+    <div class="win-stats" id="winStats"></div>
+    <div class="win-buttons">
+      <button class="ghost" id="winMapBtn">К карте</button>
+      <button class="run" id="winNextBtn">Дальше →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Приветствие -->
+<div class="overlay" id="introOverlay" hidden>
+  <div class="sheet intro">
+    <div class="intro-art" aria-hidden="true">🤖</div>
+    <h1>Пик-Квест</h1>
+    <p class="lead">Мир Пифонии сломан. Ты — единственный, кто умеет говорить с машинами.</p>
+    <p>Пиши настоящий <b>Python</b>, чтобы вести робота Пика через лабиринты, собирать кристаллы и чинить порталы.
+      16 уровней: от первого шага до Ядра.</p>
+    <ul class="intro-list">
+      <li><span>💻</span> Работает на ПК и телефоне</li>
+      <li><span>🐍</span> Код исполняется по-настоящему</li>
+      <li><span>💾</span> Прогресс сохраняется в браузере</li>
+    </ul>
+    <button class="run wide" id="introStart">Начать</button>
+  </div>
+</div>
+
+<!-- Загрузка -->
+<div class="overlay" id="loadingOverlay" hidden>
+  <div class="loader">
+    <div class="loader-bot">🤖</div>
+    <div class="loader-title">Загружаю Python…</div>
+    <div class="loader-sub" id="loaderSub">Это нужно один раз, около 10 МБ</div>
+    <div class="bar"><div class="bar-fill"></div></div>
+  </div>
+</div>
+
+<script src="js/levels.js?v=7"></script>
+<script src="js/sim.js?v=7"></script>
+<script src="js/editor.js?v=7"></script>
+<script src="js/pyrunner.js?v=7"></script>
+<script src="js/pwa.js?v=7"></script>
+<script src="js/app.js?v=7"></script>
+</body>
+</html>
